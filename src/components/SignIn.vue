@@ -1,38 +1,36 @@
 <template>
-	<div class="username">
-		<Title content="My Account"></Title>
+	<div class="signInComponent">
+		<!-- RETIRAR DEPOIS -->
+		<h1>Sign in form</h1>
 		<form @submit.prevent="submitForm">
 			<div class="form-control" :class="{ invalid: !username.isValid }">
-				<label for="username-input">Username*</label>
+				<label for="username-input">Username</label>
 				<input type="text" v-model.trim="username.val" id="username-input" @blur="clearValidity('username')"
 					placeholder="Username" />
 				<p v-if="!username.isValid && !formIsValid">UserName must have a valid value!</p>
 			</div>
-			<div class="form-control" :class="{ invalid: !email.isValid }">
-				<label for="email-input">E-mail*</label>
-				<input type="email" v-model.trim="email.val" id="email-input" @blur="clearValidity('email')"
+			<div class="form-control" :class="{ invalid: !password.isValid }">
+				<label for="password-input">Password</label>
+				<input type="password" v-model.trim="password.val" id="password-input" @blur="clearValidity('password')"
 					placeholder="E-mail" />
-				<p v-if="!email.isValid && !formIsValid">E-mail must have a valid value!</p>
+				<p v-if="!password.isValid && !formIsValid">Password must have 6 or more characters!</p>
 			</div>
 			<div class="form-control">
-				<button type="submit"> Save </button>
-
+				<button type="submit"> Sign in </button>
 			</div>
-			<hr />
+			<p>Don't have an account? <RouterLink to="/signup">Click here to sign up</RouterLink>
+				<hr />
+			</p>
 			Username --> {{ username }} <br />
-			E-mail --> {{ email }}
+			Password --> {{ password }}
 		</form>
 	</div>
 </template>
 
 <script lang="ts">
-import Title from "../components/Title.vue";
 import { defineComponent, ref, type Ref } from 'vue';
 
 export default defineComponent({
-	components: {
-		Title
-	},
 	props: {
 		content: { type: String, required: true, default: '' },
 		shouldShowFilters: { type: Boolean, required: false, default: false },
@@ -40,12 +38,8 @@ export default defineComponent({
 
 	setup() {
 		const username: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
-		const email: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
+		const password: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
 		let formIsValid: Ref<boolean> = ref(true);
-
-		function validateEmail(): boolean {
-			return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value.val)) ?? false;
-		}
 
 		function validateForm() {
 			formIsValid.value = true;
@@ -54,10 +48,11 @@ export default defineComponent({
 				formIsValid.value = false;
 			}
 
-			if (email.value.val.length === 0 && !validateEmail()) {
-				email.value.isValid = false;
+			if (password.value.val.length < 6) {
+				password.value.isValid = false;
 				formIsValid.value = false;
 			}
+
 		}
 
 		const clearValidity = (input: string): void => {
@@ -74,7 +69,7 @@ export default defineComponent({
 
 		return {
 			username,
-			email,
+			password,
 			formIsValid,
 			submitForm,
 			clearValidity

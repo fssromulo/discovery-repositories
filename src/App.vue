@@ -9,7 +9,7 @@ import { RouterLink, RouterView } from "vue-router";
 			<nav>
 				<RouterLink to="/discovery">Discovery</RouterLink>&nbsp;
 				<RouterLink to="/username">Username</RouterLink>&nbsp;
-				<RouterLink to="/logout">Logout</RouterLink>
+				<RouterLink to="/">Logout</RouterLink>
 			</nav>
 		</div>
 	</header>

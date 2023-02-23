@@ -1,9 +1,14 @@
 <template>
     <div class="title-wrapper">
-        {{ title }}
+        {{ content }}
         <select v-model="filter" v-if="shouldShowFilters">
             <option v-for="filterOpt in filtersOptions" :value="filterOpt.value">{{ filterOpt.label }}</option>
-        </select> --> Filter Value: {{ filter }}
+        </select>
+        <!-- Remove this SPAN TAG - It's used just for test -->
+        <!-- Remove this SPAN TAG - It's used just for test -->
+        <!-- Remove this SPAN TAG - It's used just for test -->
+        <!-- Remove this SPAN TAG - It's used just for test -->
+        <span v-if="shouldShowFilters"> --> Filter Value: {{ filter }} </span>
 
     </div>
 </template>
@@ -22,7 +27,7 @@ enum EFiltersOption {
 
 export default defineComponent({
     props: {
-        title: { type: String, required: true, default: '' },
+        content: { type: String, required: true, default: '' },
         shouldShowFilters: { type: Boolean, required: false, default: false },
     },
 
