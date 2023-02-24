@@ -40,7 +40,6 @@ export default defineComponent({
 	},
 
 	setup() {
-
 		const router = useRouter();
 		const userLocalStorage = JSON.parse(localStorage.getItem('userData') ?? '{}');
 
@@ -54,6 +53,7 @@ export default defineComponent({
 
 		function validateForm() {
 			formIsValid.value = true;
+
 			if (username.value.val.length === 0) {
 				username.value.isValid = false;
 				formIsValid.value = false;
