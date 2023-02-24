@@ -26,8 +26,9 @@
 </template>
 
 <script lang="ts">
-import Title from "../components/Title.vue";
 import { defineComponent, ref, type Ref } from 'vue';
+import { useRouter } from "vue-router";
+import Title from "../components/Title.vue";
 
 export default defineComponent({
 	components: {
@@ -39,8 +40,12 @@ export default defineComponent({
 	},
 
 	setup() {
-		const username: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
-		const email: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
+
+		const router = useRouter();
+		const userLocalStorage = JSON.parse(localStorage.getItem('userData') ?? '{}');
+
+		const username: Ref<{ val: string, isValid: boolean }> = ref({ val: userLocalStorage?.username ?? '', isValid: true });
+		const email: Ref<{ val: string, isValid: boolean }> = ref({ val: userLocalStorage?.email ?? '', isValid: true });
 		let formIsValid: Ref<boolean> = ref(true);
 
 		function validateEmail(): boolean {
@@ -64,11 +69,36 @@ export default defineComponent({
 			eval(input).value.isValid = true;
 		}
 
-		const submitForm = (): void => {
+		const submitForm = async (): Promise<void> => {
 			validateForm();
-
 			if (formIsValid.value === true) {
-				console.log('POST TO SOMEWHERE...');
+				const token = localStorage.getItem('token') ?? '';
+
+				// Salvar o user no banco do FIREBASE
+				const authUrl = `auth=${token}`;
+				const urlSaveUser = `https://discovery-repositories-default-rtdb.firebaseio.com/users/${userLocalStorage.idUser}/.json?${authUrl}`;
+
+				const changedData = {
+					username: username.value.val,
+					email: email.value.val,
+				};
+
+				const data = { ...userLocalStorage, ...changedData }
+
+				const responseSaveUser = await fetch(urlSaveUser, {
+					method: "PUT",
+					body: JSON.stringify(data),
+				});
+
+				const responseDataSaveUSer = await responseSaveUser.json();
+				if (!responseSaveUser.ok) {
+					const error = new Error(responseDataSaveUSer.message || "Failed to send a user!");
+					throw error;
+				}
+
+				localStorage.setItem("userData", JSON.stringify(data));
+
+				router.replace('/discovery');
 			}
 		}
 
