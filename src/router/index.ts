@@ -32,7 +32,6 @@ const router = createRouter({
 
 router.beforeEach((to, _, next) => {
 	const hasToken = localStorage.getItem("token") ?? "";
-	console.log("router--->", hasToken, to.name);
 	if (to.name !== "auth" && hasToken.length === 0) {
 		console.log("teste ...");
 		next("/auth");

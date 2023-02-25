@@ -127,7 +127,6 @@ export default defineComponent({
         }
 
         const submitForm = async (): Promise<void> => {
-            console.clear();
             validateForm();
 
             if (formIsValid.value === true) {
@@ -138,11 +137,7 @@ export default defineComponent({
                     idUser: null
                 }
 
-                let url = '';
-                //url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCoG9_oLjMpmAxVhlYRqnStbTpdWiMTS1A";
-
-                url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCoG9_oLjMpmAxVhlYRqnStbTpdWiMTS1A`;
-
+                const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCoG9_oLjMpmAxVhlYRqnStbTpdWiMTS1A`;
                 const response = await fetch(url, {
                     method: "POST",
                     body: JSON.stringify({
