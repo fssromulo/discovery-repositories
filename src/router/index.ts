@@ -1,39 +1,39 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
 		{
 			path: "/username",
-			name: "UsernameView",
-			// route level code-splitting
-			// this generates a separate chunk (About.[hash].js) for this route
-			// which is lazy-loaded when the route is visited.
+			name: "usernameview",
 			component: () => import("../views/UsernameView.vue"),
+			meta: { requireAuth: true },
 		},
 		{
 			path: "/discovery",
-			name: "DiscoveryView",
+			name: "discoveryview",
 			component: () => import("../views/DiscoveryView.vue"),
+			meta: { requireAuth: true },
 		},
 		{
 			path: "/signup",
-			name: "SignupView",
+			name: "signupview",
 			component: () => import("../views/SignupView.vue"),
+			meta: { requireAuth: false },
 		},
 		{
 			path: "/auth",
 			name: "auth",
-			component: HomeView,
+			component: () => import("../views/HomeView.vue"),
+			meta: { requireAuth: false },
 		},
+		{ path: "/:notFound(.*)", component: () => import("../views/HomeView.vue") },
 	],
 });
 
 router.beforeEach((to, _, next) => {
 	const hasToken = localStorage.getItem("token") ?? "";
-	if (to.name !== "auth" && hasToken.length === 0) {
-		console.log("teste ...");
+	if (to.name !== "auth" && hasToken.length === 0 && to.meta.requireAuth === true) {
 		next("/auth");
 	} else {
 		next();

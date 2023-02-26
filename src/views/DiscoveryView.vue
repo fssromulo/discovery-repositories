@@ -1,6 +1,5 @@
 <template>
 	<div class="username">
-		<h1>DiscoveryView</h1>
 		<Title content="My Bookmarks"></Title>
 		<RepositoriesList :repositories="markedList" />
 
