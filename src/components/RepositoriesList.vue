@@ -7,16 +7,21 @@
                     <span @click="addStarClick(item.id)" class="icon" v-if="!item.favorite">&star;</span>
                     <span @click="removeStarClick(item.id)" class="icon" v-else>&starf;</span>
                 </div>
+
             </span>
             <span v-else>
-                Vazio
+                <v-col cols="12">
+                    <v-sheet class="pa-2 ma-2">
+                        <v-alert title="Nothing to show here." text="Sorry but you didnt select any favorites repos yet :("
+                            type="info" variant="tonal"></v-alert>
+                    </v-sheet>
+                </v-col>
             </span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
 
 const props = defineProps<{
     repositories: Array<{ id: number, fullName: string, name: string, language: string, favorite: boolean }>;
@@ -32,27 +37,25 @@ function repoImageUrl(repoFullName: string): string {
 }
 
 function removeStarClick(id: number): void {
-    const listaNoStorage = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
-    const index = listaNoStorage.findIndex((repo: any) => { return repo.id === id });
+    const storageList = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
+    const index = storageList.findIndex((repo: any) => { return repo.id === id });
     // remove item
-    const removed = listaNoStorage.splice(index, 1);
-    localStorage.setItem('myBookMarks', JSON.stringify(listaNoStorage));
+    const removed = storageList.splice(index, 1);
+    localStorage.setItem('myBookMarks', JSON.stringify(storageList));
     emit('handleMyList');
     emit('handleFilter', { language: removed[0]?.language, sort: '' } ?? '')
 }
 
 function addStarClick(id: number): void {
     const repo = props.repositories.filter(repo => { return repo.id === id });
-    const listaNoStorage = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
+    const storageList = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
 
     repo[0].favorite = true;
-    listaNoStorage.push(repo[0])
-    localStorage.setItem('myBookMarks', JSON.stringify(listaNoStorage));
+    storageList.push(repo[0])
+    localStorage.setItem('myBookMarks', JSON.stringify(storageList));
     emit('handleMyList');
     emit('handleFilter', { language: repo[0]?.language, sort: '' })
 }
-
-onMounted(() => { })
 
 </script>
 

@@ -1,8 +1,8 @@
 <template>
     <div class="signInComponent">
 
-        <v-sheet width="500" class="mx-auto"><br />
-            <v-btn :disabled="isLoading" variant="text" color="primary" type="button" @click="goBack">
+        <v-sheet width="500" class="mx-auto">
+            <v-btn variant="text" color="primary" type="button" @click="goBack">
                 &lt; Back
             </v-btn>
             <Title content="SIGN UP Form"></Title>
@@ -14,8 +14,7 @@
                     <v-alert v-if="!username.isValid && !formIsValid" text="UserName must have a valid value!"
                         color="error"></v-alert>
                     <v-alert v-if="username.alreadyExists && !formIsValid"
-                        text="This username already have been chosen, please pick
-                                                                                                                                another one!" color="error"></v-alert>
+                        text="This username already have been chosen, please pick another one!" color="error"></v-alert>
 
                 </div>
                 <div class="form-control">
@@ -24,8 +23,7 @@
                     <v-alert v-if="!login.isValid && !formIsValid" text="E-mail must have a valid value!"
                         color="error"></v-alert>
                     <v-alert v-if="login.alreadyExists && !formIsValid"
-                        text="This e-mail already have been chosen, please pick
-                                                                                                                                another one!" color="error"></v-alert>
+                        text="This e-mail already have been chosen, please pick another one!" color="error"></v-alert>
 
                 </div>
                 <div class="form-control">

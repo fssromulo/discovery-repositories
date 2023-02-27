@@ -3,33 +3,34 @@
 		<Title content="My Bookmarks"></Title>
 		<RepositoriesList :repositories="markedList" />
 
+		<br />
 		<hr />
-		<h3>Aqui vai o "tooglle topics to show"</h3>
+		<TopicsFilter @handleUpdate="updateSelectTopics" :tech-list="techList" :initial-value="selectedTopics" />
 		<hr />
-
 		<br />
-		<h1 v-if="load">CArregando</h1>
-		<Title content="Top vue" language="Vue" :should-show-filters="true" @handleFilter="handleFilter"></Title>
-		<RepositoriesList :repositories="vueList" @handleMyList="handleMyList" @handleFilter="handleFilter" />
 
-		<br />
-		<br />
-		<Title content="Top Javascript" language="Javascript" :should-show-filters="true" @handleFilter="handleFilter">
-		</Title>
-		<RepositoriesList :repositories="jsList" @handleMyList="handleMyList" @handleFilter="handleFilter" />
-
+		<div v-for="item in listOfTechnologies">
+			<Title :content="`Top ${item.language}`" :language="item.language" :should-show-filters="true"
+				@handleFilter="handleFilter">
+			</Title>
+			<RepositoriesList :repositories="item.list" @handleMyList="handleMyList" @handleFilter="handleFilter" />
+			<br />
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
+import TopicsFilter from "@/components/TopicsFilter/TopicsFilter.vue";
 import { defineComponent, onMounted, ref, type Ref } from 'vue';
-import Title from "../components/Title.vue";
 import RepositoriesList from "../components/RepositoriesList.vue";
+import Title from "../components/Title.vue";
+
 
 export default defineComponent({
 	components: {
 		Title,
-		RepositoriesList
+		RepositoriesList,
+		TopicsFilter
 	},
 	setup() {
 
@@ -37,6 +38,18 @@ export default defineComponent({
 		const jsList: Ref<any[]> = ref([]);
 		const load: Ref<boolean> = ref(false);
 		const markedList: Ref<any[]> = ref([]);
+		const selectedTopics: Ref<any[]> = ref([1, 2]);
+
+		const techList = [
+			'Vue',
+			'TypeScript',
+			'Javascript',
+			'Go',
+			'Css',
+			'Node'
+		]
+
+		const listOfTechnologies: Ref<any[]> = ref([]);
 
 		const searchTechnology = async (language: string, sort: string = ''): Promise<any[]> => {
 			let sortUrl = '';
@@ -52,8 +65,9 @@ export default defineComponent({
 				const error = new Error(responseData.message || "Failed to fetch!");
 				throw error;
 			}
+			const favoriteList = getOnlyFavoriteReposForTheCurrentUser();
+			const loggedUser = JSON.parse(localStorage.getItem("userData") ?? '');
 			load.value = false;
-			const favoriteList = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
 			return responseData.items.map((item: any) => {
 				const isFavorite = favoriteList.findIndex((fav: any) => (fav.id === item.id));
 
@@ -63,28 +77,49 @@ export default defineComponent({
 					name: item.name,
 					language: item.language.toLowerCase(),
 					favorite: isFavorite >= 0,
+					idUser: loggedUser.idUser as string
 				} as { id: number, fullName: string, name: string, language: string, favorite: boolean }
 			});
 		}
 
 		onMounted(async () => {
 			handleMyList();
-			vueList.value = await searchTechnology('Vue');
-			jsList.value = await searchTechnology('Javascript');
+			listOfTechnologies.value = await loadReposBasedOnSelectedTopics();
 		});
 
 		async function handleFilter(paramValue: any): Promise<void> {
-			if (paramValue.language === 'vue') {
-				vueList.value = await searchTechnology(paramValue.language, paramValue.sort.toLowerCase());
-			}
+			const index = listOfTechnologies.value.findIndex(el => el.language.toLocaleLowerCase() === paramValue.language.toLocaleLowerCase());
+			listOfTechnologies.value[index].list = await searchTechnology(paramValue.language, paramValue.sort.toLowerCase());
+		}
 
-			if (paramValue.language === 'javascript') {
-				jsList.value = await searchTechnology(paramValue.language, paramValue.sort.toLowerCase());
-			}
+		function getOnlyFavoriteReposForTheCurrentUser(): any[] {
+			const allItens = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
+
+			const loggedUser = JSON.parse(localStorage.getItem("userData") ?? '');
+			return allItens.filter((itens: any) => (itens?.idUser === loggedUser.idUser));
 		}
 
 		function handleMyList(): void {
-			markedList.value = JSON.parse(localStorage.getItem('myBookMarks') ?? '[]');
+			markedList.value = getOnlyFavoriteReposForTheCurrentUser();
+		}
+
+		async function loadReposBasedOnSelectedTopics(): Promise<any[]> {
+			// @ts-ignore
+			const arr: [{
+				language: string,
+				list: any[]
+			}] = [];
+			for (const key of selectedTopics.value) {
+				const selected = techList[key];
+				const list = await searchTechnology(selected);
+				arr.push({ language: selected, list })
+			}
+			return arr;
+		}
+
+		async function updateSelectTopics(param: any): Promise<void> {
+			selectedTopics.value = param;
+			listOfTechnologies.value = await loadReposBasedOnSelectedTopics();
 		}
 
 		return {
@@ -92,8 +127,12 @@ export default defineComponent({
 			jsList,
 			load,
 			markedList,
+			selectedTopics,
 			handleFilter,
-			handleMyList
+			handleMyList,
+			techList,
+			listOfTechnologies,
+			updateSelectTopics
 		}
 	},
 

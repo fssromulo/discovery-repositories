@@ -20,7 +20,6 @@ const route = useRoute();
 
 function logout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('myBookMarks');
     localStorage.removeItem('userData');
     router.replace('/auth');
 }

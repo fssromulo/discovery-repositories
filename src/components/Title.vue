@@ -1,9 +1,15 @@
 <template>
     <div class="title-wrapper">
-        <span class="title-content">{{ content }}</span> &nbsp;
-        <select v-model="filter" v-if="shouldShowFilters" @change="handleFilter()">
-            <option v-for="filterOpt in filtersOptions" :value="filterOpt.value">{{ filterOpt.label }}</option>
-        </select>
+        <v-row>
+            <v-col cols="4">
+                <span class="title-content">{{ content }}</span> &nbsp;
+
+            </v-col>
+            <v-col cols="8">
+                <v-select chips v-model="filter" v-if="shouldShowFilters" @update:modelValue="handleFilter()"
+                    :items="filtersOptions" item-title="label" item-value="value" density="compact"></v-select>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -37,7 +43,7 @@ export default defineComponent({
         ]
 
         function handleFilter() {
-            const filterRepos = { language: props.language, sort: filter.value };
+            const filterRepos = { language: props.language.toLocaleLowerCase(), sort: filter.value.toLocaleLowerCase() };
             context.emit('handleFilter', filterRepos)
         }
 
@@ -57,7 +63,7 @@ export default defineComponent({
 }
 
 .title-content {
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 900;
 }
 </style>
