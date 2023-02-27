@@ -1,25 +1,30 @@
-# discovery-repositories
+# Code Challenge Rômulo
 
-This template should help get you started developing with Vue 3 in Vite.
+I created a project that list a bunch of Github repositories inspired by Netflix layout.
 
-## Recommended IDE Setup
+This project has a Sign in and Sign up area where old user can logged in and new users had a chance to register as a new user. Also has a discovery area where users can rate and filter some repositories. On top of this screen will show all the repositories that the user settled as his favorite by clicking on the star icon at the repositories card. Each user has his own list of favorite repos. And at least we has a screen when the user can update his infomation, for example: Username and E-mail.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features
 
-## Type Support for `.vue` Imports in TS
+I would like to Highlights some points of this project:
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+-  Authentication with Firebase;
+-  It's using Real Time Database from Google to store user's data;
+-  It was code with Vue 3 in Vite, Typescript and Vuetify;
+-  I don't have enought time to improve my code with unit test.
+-  I've used AWS amplify to deploy it;
+-  In order to demonstrate my skills, I build the project from the scratch and made commit's on git always that a I've finished a little piece or a component.
+-  In adition, pay attencion how start with dummy data on my components and then I fill it with the real data. I did that to ensure I was build the components with the correct behavior before add all the business rules into.
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Autor
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+-  [@fssromulo](https://github.com/fssromulo)
 
-## Customize configuration
+## Demo
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+Link to access the project running: https://main.d3h1ze7azyt8lc.amplifyapp.com/auth
+
+## Installation
 
 ## Project Setup
 
@@ -44,3 +49,4 @@ npm run build
 ```sh
 npm run lint
 ```
+
