@@ -32,6 +32,7 @@ import { defineComponent, ref, type Ref } from 'vue';
 import { useRouter } from "vue-router";
 import Overlay from "@/components/overlay/Overlay.vue";
 import Title from "@/components/Title.vue";
+import { validateEmail } from './EmailValidation';
 
 export default defineComponent({
 	components: {
@@ -52,9 +53,6 @@ export default defineComponent({
 		let formIsValid: Ref<boolean> = ref(true);
 		const isLoading: Ref<boolean> = ref(false);
 
-		function validateEmail(): boolean {
-			return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.value.val)) ?? false;
-		}
 
 		function validateForm() {
 			formIsValid.value = true;
@@ -64,7 +62,7 @@ export default defineComponent({
 				formIsValid.value = false;
 			}
 
-			if (email.value.val.length === 0 && !validateEmail()) {
+			if (email.value.val.length === 0 || !validateEmail(email.value.val)) {
 				email.value.isValid = false;
 				formIsValid.value = false;
 			}

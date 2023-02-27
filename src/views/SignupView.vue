@@ -58,6 +58,7 @@ import { defineComponent, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Overlay from "@/components/overlay/Overlay.vue";
 import Title from "../components/Title.vue";
+import { validateEmail } from './EmailValidation';
 
 export default defineComponent({
     components: {
@@ -72,16 +73,12 @@ export default defineComponent({
     setup() {
         const router = useRouter();
 
-        const username: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: '', isValid: true, alreadyExists: false });
-        const password: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
-        const login: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: '', isValid: true, alreadyExists: false });
-        const passwordConfirmation: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
+        const username: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: 'user', isValid: true, alreadyExists: false });
+        const password: Ref<{ val: string, isValid: boolean }> = ref({ val: 'romulo123', isValid: true });
+        const login: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: 'asdasd.36', isValid: true, alreadyExists: false });
+        const passwordConfirmation: Ref<{ val: string, isValid: boolean }> = ref({ val: 'romulo123', isValid: true });
         const formIsValid: Ref<boolean> = ref(true);
         const isLoading: Ref<boolean> = ref(false);
-
-        function validateEmail(): boolean {
-            return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(login.value.val)) ?? false;
-        }
 
         const userNamesListAlreadyExists = async (): Promise<{ usernameList: string[], emailList: string[] }> => {
             const url = 'https://discovery-repositories-default-rtdb.firebaseio.com/users.json';
@@ -109,15 +106,15 @@ export default defineComponent({
                 isLoading.value = false;
             }
 
-            const list = await userNamesListAlreadyExists();
-            if (list.usernameList.includes(username.value.val)) {
-                username.value.alreadyExists = true;
+            if (login.value.val.length === 0 || !validateEmail(login.value.val)) {
+                login.value.isValid = false;
                 formIsValid.value = false;
                 isLoading.value = false;
             }
 
-            if (login.value.val.length === 0 && !validateEmail()) {
-                login.value.isValid = false;
+            const list = await userNamesListAlreadyExists();
+            if (list.usernameList.includes(username.value.val)) {
+                username.value.alreadyExists = true;
                 formIsValid.value = false;
                 isLoading.value = false;
             }
@@ -142,7 +139,6 @@ export default defineComponent({
         }
 
         const clearValidity = (input: string): void => {
-
             eval(input).value.isValid = true;
             eval(input).value.alreadyExists = false;
         }
