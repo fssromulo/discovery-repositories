@@ -73,10 +73,10 @@ export default defineComponent({
     setup() {
         const router = useRouter();
 
-        const username: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: 'user', isValid: true, alreadyExists: false });
-        const password: Ref<{ val: string, isValid: boolean }> = ref({ val: 'romulo123', isValid: true });
-        const login: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: 'asdasd.36', isValid: true, alreadyExists: false });
-        const passwordConfirmation: Ref<{ val: string, isValid: boolean }> = ref({ val: 'romulo123', isValid: true });
+        const username: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: '', isValid: true, alreadyExists: false });
+        const password: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
+        const login: Ref<{ val: string, isValid: boolean, alreadyExists: boolean }> = ref({ val: '', isValid: true, alreadyExists: false });
+        const passwordConfirmation: Ref<{ val: string, isValid: boolean }> = ref({ val: '', isValid: true });
         const formIsValid: Ref<boolean> = ref(true);
         const isLoading: Ref<boolean> = ref(false);
 
